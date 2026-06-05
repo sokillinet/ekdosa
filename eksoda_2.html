@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Έξοδα">
+<title>Έξοδα</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7F6F2;--surface:#FFFFFF;--surface2:#EFEFEA;
+  --text:#1A1A18;--text2:#6B6B66;--text3:#AEADA8;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --accent:#1A1A18;--accent-text:#F7F6F2;
+  --radius:14px;--radius-sm:10px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#141413;--surface:#1E1E1C;--surface2:#2A2A28;
+    --text:#F0EFE9;--text2:#9A9A94;--text3:#5A5A56;
+    --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+    --accent:#F0EFE9;--accent-text:#1A1A18;
+  }
+}
+html{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
+body{min-height:100vh;padding-bottom:3rem}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 1.25rem .875rem;position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:17px;font-weight:600;letter-spacing:-.01em}
+header p{font-size:11px;color:var(--text3);margin-top:1px}
+.save-btn{height:34px;padding:0 14px;border-radius:20px;border:1px solid var(--border2);background:var(--accent);color:var(--accent-text);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0}
+.save-btn:active{opacity:.75}
+.main{padding:1rem 1rem 0}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.s-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.875rem 1rem}
+.s-card.today{background:var(--accent);border-color:transparent}
+.s-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
+.s-card.today .s-label{color:rgba(255,255,255,.45)}
+.s-val{font-size:22px;font-weight:600;color:var(--text);letter-spacing:-.02em}
+.s-card.today .s-val{color:var(--accent-text)}
+.entry{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem}
+.amt-row{display:flex;align-items:center;border-bottom:1px solid var(--border)}
+.euro-sym{padding:0 14px;font-size:20px;font-weight:600;color:var(--text3);border-right:1px solid var(--border)}
+.amt-row input{flex:1;height:58px;border:none;background:transparent;font-size:26px;font-weight:600;color:var(--text);padding:0 14px;outline:none;font-family:'DM Sans',sans-serif;letter-spacing:-.02em}
+.amt-row input::placeholder{color:var(--text3)}
+.cat-wrap{padding:.75rem;border-bottom:1px solid var(--border)}
+.cats{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.cat-btn{height:42px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'DM Sans',sans-serif;transition:all .15s}
+.cat-btn.sel{background:var(--accent);color:var(--accent-text);border-color:transparent}
+.note-wrap{padding:.75rem;border-bottom:1px solid var(--border)}
+.note-wrap input{width:100%;border:none;background:transparent;font-size:14px;color:var(--text);outline:none;font-family:'DM Sans',sans-serif;height:32px}
+.note-wrap input::placeholder{color:var(--text3)}
+.add-btn{width:100%;height:52px;border:none;background:var(--accent);color:var(--accent-text);font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:-.01em;transition:opacity .15s}
+.add-btn:active{opacity:.75}
+.tabs{display:flex;gap:6px;margin-bottom:1rem}
+.tab{flex:1;height:36px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.tab.active{background:var(--accent);color:var(--accent-text);border-color:transparent}
+.section-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1rem}
+.section-title{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.625rem}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:flex;flex-direction:column;gap:4px}
+.bar-top{display:flex;justify-content:space-between}
+.bar-name{font-size:13px;color:var(--text2)}
+.bar-amt{font-size:13px;font-weight:600;color:var(--text)}
+.bar-track{height:3px;background:var(--border2);border-radius:2px;overflow:hidden}
+.bar-fill{height:3px;border-radius:2px;transition:width .3s ease}
+.hist{display:flex;flex-direction:column;gap:6px}
+.h-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem;display:flex;align-items:center;gap:10px}
+.h-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.h-info{flex:1;min-width:0}
+.h-cat{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+.h-note{font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h-r{text-align:right;flex-shrink:0}
+.h-amt{font-size:15px;font-weight:600;color:var(--text)}
+.h-date{font-size:11px;color:var(--text3);margin-top:1px}
+.h-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:20px;line-height:1;padding:4px;flex-shrink:0}
+.empty{text-align:center;padding:2rem;color:var(--text3);font-size:14px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--accent-text);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;z-index:100;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Καταγραφέας εξόδων</h1><p id="hdr-date"></p></div>
+  <button class="save-btn" onclick="saveToFile()">💾 Αποθήκευση</button>
+</header>
+<div class="main">
+  <div class="summary" id="summary"></div>
+  <div class="entry">
+    <div class="amt-row">
+      <div class="euro-sym">€</div>
+      <input type="text" id="inp-amt" placeholder="0.00" inputmode="decimal">
+    </div>
+    <div class="cat-wrap"><div class="cats" id="cats"></div></div>
+    <div class="note-wrap"><input type="text" id="inp-note" placeholder="Σημείωση (προαιρετικό)…"></div>
+    <button class="add-btn" onclick="addExpense()">+ Προσθήκη</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-tab="week" onclick="switchTab(this)">Εβδομάδα</button>
+    <button class="tab" data-tab="month" onclick="switchTab(this)">Μήνας</button>
+    <button class="tab" data-tab="all" onclick="switchTab(this)">Όλα</button>
+  </div>
+  <div class="section-wrap">
+    <div class="section-title">Ανά κατηγορία</div>
+    <div class="bars" id="bars"></div>
+  </div>
+  <div class="section-wrap">
+    <div class="section-title">Εγγραφές</div>
+    <div class="hist" id="hist"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const CATS=[
+  {name:'Καφές',color:'#C2854A'},
+  {name:'Φαγητό',color:'#4A9E6B'},
+  {name:'Ψυχαγωγία',color:'#6B5FD4'},
+  {name:'Ποτό',color:'#C45C8E'},
+  {name:'Μεταφορά',color:'#3A7FC1'},
+  {name:'Αγορές',color:'#C49520'},
+  {name:'Άλλο',color:'#888884'},
+];
+
+// DATA EMBEDDED IN FILE — updated on every save
+var EMBEDDED_DATA = [];
+
+let expenses=[...EMBEDDED_DATA], selCat=CATS[0].name, tab='week';
+
+function today(){return new Date().toISOString().split('T')[0];}
+function weekStart(){const d=new Date();d.setHours(0,0,0,0);const day=d.getDay();d.setDate(d.getDate()-(day===0?6:day-1));return d.toISOString().split('T')[0];}
+function monthStart(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`;}
+function filtered(){
+  if(tab==='week')return expenses.filter(e=>e.date>=weekStart());
+  if(tab==='month')return expenses.filter(e=>e.date>=monthStart());
+  return[...expenses];
+}
+function fmtDate(iso){const[,m,d]=iso.split('-');return`${d}/${m}`;}
+function fmtGreekDate(d){
+  const days=['Κυρ','Δευ','Τρι','Τετ','Πεμ','Παρ','Σαβ'];
+  const months=['Ιαν','Φεβ','Μαρ','Απρ','Μαΐ','Ιουν','Ιουλ','Αυγ','Σεπ','Οκτ','Νοε','Δεκ'];
+  return`${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function buildCats(){
+  document.getElementById('cats').innerHTML=CATS.map(c=>
+    `<button class="cat-btn${c.name===selCat?' sel':''}" onclick="selCat='${c.name}';buildCats()">${c.name}</button>`
+  ).join('');
+}
+
+function addExpense(){
+  const amt=parseFloat(document.getElementById('inp-amt').value.replace(',','.'));
+  if(!amt||amt<=0){document.getElementById('inp-amt').focus();return;}
+  const note=document.getElementById('inp-note').value.trim();
+  expenses.unshift({id:Date.now(),date:today(),cat:selCat,amt:Math.round(amt*100)/100,note});
+  document.getElementById('inp-amt').value='';
+  document.getElementById('inp-note').value='';
+  render();
+  showToast('Προστέθηκε! Πάτα 💾 για αποθήκευση');
+}
+
+function del(id){
+  expenses=expenses.filter(e=>e.id!==id);
+  render();
+  showToast('Διαγράφηκε');
+}
+
+function switchTab(el){
+  tab=el.dataset.tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function saveToFile(){
+  // Read current HTML, replace the EMBEDDED_DATA line with new data, download
+  const dataStr=JSON.stringify(expenses);
+  fetch(window.location.href)
+    .then(r=>r.text())
+    .then(html=>{
+      const updated=html.replace(
+        /var EMBEDDED_DATA = \[.*?\];/s,
+        `var EMBEDDED_DATA = ${dataStr};`
+      );
+      const blob=new Blob([updated],{type:'text/html'});
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='eksoda.html';
+      a.click();
+      showToast('✅ Αποθηκεύτηκε!');
+    })
+    .catch(()=>{
+      // Fallback: rebuild the full HTML with embedded data
+      const html=buildFullHTML(dataStr);
+      const blob=new Blob([html],{type:'text/html'});
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='eksoda.html';
+      a.click();
+      showToast('✅ Αποθηκεύτηκε!');
+    });
+}
+
+function buildFullHTML(dataStr){
+  return document.documentElement.outerHTML.replace(
+    /var EMBEDDED_DATA = \[.*?\];/s,
+    `var EMBEDDED_DATA = ${dataStr};`
+  );
+}
+
+function render(){
+  const now=new Date();
+  document.getElementById('hdr-date').textContent=fmtGreekDate(now);
+  const td=expenses.filter(e=>e.date===today()).reduce((s,e)=>s+e.amt,0);
+  const wk=expenses.filter(e=>e.date>=weekStart()).reduce((s,e)=>s+e.amt,0);
+  const mo=expenses.filter(e=>e.date>=monthStart()).reduce((s,e)=>s+e.amt,0);
+  document.getElementById('summary').innerHTML=`
+    <div class="s-card today"><div class="s-label">Σήμερα</div><div class="s-val">${td.toFixed(2)}€</div></div>
+    <div class="s-card"><div class="s-label">Εβδομάδα</div><div class="s-val">${wk.toFixed(2)}€</div></div>
+    <div class="s-card"><div class="s-label">Μήνας</div><div class="s-val">${mo.toFixed(2)}€</div></div>
+    <div class="s-card"><div class="s-label">Εγγραφές</div><div class="s-val">${expenses.length}</div></div>
+  `;
+  const list=filtered();
+  const catMap={};
+  list.forEach(e=>{catMap[e.cat]=(catMap[e.cat]||0)+e.amt;});
+  const maxAmt=Math.max(1,...Object.values(catMap));
+  const barsEl=document.getElementById('bars');
+  if(!Object.keys(catMap).length){
+    barsEl.innerHTML='<div class="empty">Δεν υπάρχουν έξοδα</div>';
+  } else {
+    barsEl.innerHTML=Object.entries(catMap).sort((a,b)=>b[1]-a[1]).map(([cat,amt])=>{
+      const c=CATS.find(x=>x.name===cat)||{color:'#888'};
+      const pct=Math.round(amt/maxAmt*100);
+      return`<div class="bar-row"><div class="bar-top"><span class="bar-name">${cat}</span><span class="bar-amt">${amt.toFixed(2)}€</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${c.color}"></div></div></div>`;
+    }).join('');
+  }
+  const histEl=document.getElementById('hist');
+  if(!list.length){
+    histEl.innerHTML='<div class="empty">Καμία εγγραφή ακόμα</div>';
+  } else {
+    histEl.innerHTML=list.map(e=>{
+      const c=CATS.find(x=>x.name===e.cat)||{color:'#888'};
+      return`<div class="h-item">
+        <div class="h-dot" style="background:${c.color}"></div>
+        <div class="h-info"><div class="h-cat">${e.cat}</div><div class="h-note">${e.note||'—'}</div></div>
+        <div class="h-r"><div class="h-amt">${e.amt.toFixed(2)}€</div><div class="h-date">${fmtDate(e.date)}</div></div>
+        <button class="h-del" onclick="del(${e.id})" aria-label="Διαγραφή">×</button>
+      </div>`;
+    }).join('');
+  }
+}
+
+buildCats();render();
+</script>
+</body>
+</html>
